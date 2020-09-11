@@ -8,9 +8,6 @@ const
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
-
-
-
 // Creates the endpoint for our webhook
 app.post('/webhook', (req, res) => {
 
@@ -29,20 +26,18 @@ app.post('/webhook', (req, res) => {
     });
 
     // Returns a '200 OK' response to all requests
-    res.send('EVENT_RECEIVED');
+    res.status(200).send('EVENT_RECEIVED');
   } else {
     // Returns a '404 Not Found' if event is not from a page subscription
-    res.send("404");
+    res.sendStatus(404);
   }
 
 });
-
-// Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
 
   // Your verify token. Should be a random string.
-  let VERIFY_TOKEN = "hey"
-  res.send("hey")
+  let VERIFY_TOKEN = "<YOUR_VERIFY_TOKEN>"
+
   // Parse the query params
   let mode = req.query['hub.mode'];
   let token = req.query['hub.verify_token'];
@@ -56,11 +51,11 @@ app.get('/webhook', (req, res) => {
 
       // Responds with the challenge token from the request
       console.log('WEBHOOK_VERIFIED');
-      //res.status(200).send(challenge);
+      res.status(200).send(challenge);
 
     } else {
       // Responds with '403 Forbidden' if verify tokens do not match
-      res.send("hey")
+      res.sendStatus(403);
     }
   }
 });
